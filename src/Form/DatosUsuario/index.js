@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
-import { ValidarEmail,ValidarPassword } from "./validaciones";
+import { validarEmail, validarPassword } from "./validaciones";
 
-//!Esto es definir por function Components
-const DatosUsuario = () =>{
-  const [email,setEmail] = useState({value: "", valid:"null"})
-  const [password,setPassword] = useState({value:"",valid:"null"})
+const DatosUsuario = ({ updateStep }) => {
+  const [email, setEmail] = useState({
+    value: "",
+    valid: null,
+  });
+  const [password, setPassword] = useState({ value: "", valid: null });
+
   return (
     <Box
       component="form"
@@ -17,15 +20,14 @@ const DatosUsuario = () =>{
         flexDirection: "column",
       }}
       onSubmit={(e) => {
-        e.preventDefault()
-        if(password.valid && email.valid){
-          console.log("Siguiente fomrulario")
-          console.log(email,password)
-        }else{
-          console.log("Nada")
+        e.preventDefault();
+        if (email.valid && password.valid) {
+          console.log("Siguiente formulario");
+          console.log(email, password);
+          updateStep(1);
+        } else {
+          console.log("No hacer nada");
         }
-        
-        
       }}
     >
       <TextField
@@ -35,14 +37,15 @@ const DatosUsuario = () =>{
         margin="dense"
         type="email"
         error={email.valid === false}
-        helperText={email.valid === false && "Ingresa un correo electrónico válido"}
-        value={email.value}
-        onChange={(e) => {
-          const email = e.target.value
-          const valido = ValidarEmail(email)
-          setEmail({value:email,valid:valido})
-          }
+        helperText={
+          email.valid === false && "Ingresa un correo electrónico válido."
         }
+        value={email.value}
+        onChange={(input) => {
+          const email = input.target.value;
+          const valido = validarEmail(email);
+          setEmail({ value: email, valid: valido });
+        }}
       />
       <TextField
         label="Contraseña"
@@ -50,78 +53,22 @@ const DatosUsuario = () =>{
         fullWidth
         margin="dense"
         type="password"
-        helperText={password.valid === false && "Ingresa una contraseña valida, al menos 8 caracteres"}
         error={password.valid === false}
-        value={password.value}
-        onChange={(e) => {
-          const password = e.target.value
-          setPassword({value:password,valid:ValidarPassword(password)})
+        helperText={
+          password.valid === false &&
+          "Ingresa una contraseña válida, Al menos 8 caracteres y máximo 20."
         }
-      }
+        value={password.value}
+        onChange={(input) => {
+          const password = input.target.value;
+          setPassword({ value: password, valid: validarPassword(password) });
+        }}
       />
       <Button variant="contained" type="submit">
         Siguiente
       </Button>
     </Box>
   );
-}
-//!Esto es definier por clases
-/* 
-// class DatosUsuario extends React.Component {
-//   constructor(props){
-//     super(props);
-//       this.state ={
-//         email:{
-//           value:"",
-//           valid: true
-//         },
-//         password:{
-//           value:"",
-//           valid: true
-//         }
-//       }
-//     }
-//   render() {
-//     return (
-//       <Box
-//         component="form"
-//         autocomplete="off"
-//         sx={{
-//           display: "flex",
-//           alignItems: "center",
-//           justifyContent: "center",
-//           flexDirection: "column",
-//         }}
-//         onSubmit={(e) => {
-//           e.preventDefault()
-//         }}
-//       >
-//         <TextField
-//           label="Correo electrónico"
-//           variant="outlined"
-//           fullWidth
-//           margin="dense"
-//           type="email"
-//           error={false}
-//           helperText={false && "Ingresa un correo electrónico válido"}
-//           value={this.state.email.value}
-//           onChange={(e) => this.setState({email:{value:e.target.value}})}
-//         />
-//         <TextField
-//           label="Contraseña"
-//           variant="outlined"
-//           fullWidth
-//           margin="dense"
-//           type="password"
-//           value={this.state.password.value}
-//           onChange={(e) => this.setState({password:{value:e.target.value}})}
-//         />
-//         <Button variant="contained" type="submit">
-//           Siguiente
-//         </Button>
-//       </Box>
-//     );
-//   }
-// }
-*/
+};
+
 export default DatosUsuario;
